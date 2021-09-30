@@ -60,7 +60,7 @@ function onBackdropClick(event){
 }
 
 function onEscKeyPress(event){
- if(event.code === "Escape");{
+ if(event.code === "Escape"){
    onCloseModal();
  }
 }
