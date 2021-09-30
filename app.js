@@ -1,30 +1,18 @@
-//импорт данных
 import galleryItems from "./references/images.js "
 
-// доступ к элементам
-const refs = {
-  galleryContainer: document.querySelector('.js-gallery'),
-  modalBox: document.querySelector('.js-lightbox'),
-  img: document.createElement('img'),
-  lightbox: document.querySelector('.lightbox'),
-  closeBtn: document.querySelector('[data-action="close-lightbox"]'),
-  modal: document.querySelector('.lightbox__content'),
-  lightbox__image: document.querySelector('.lightbox-image'),
-  overlay: document.querySelector('.lightbox__overlay')
-}
-const {galleryContainer, modalBox, img, lightbox, closeBtn, lightbox__image} = refs
+const galleryContainer = document.querySelector('.js-gallery')
+const  closeBtn = document.querySelector('[data-action="close-lightbox"]')
+const modalBox = document.querySelector('.js-lightbox')
+const lightbox__image = document.querySelector('.lightbox__image')
+const backdrop = document.querySelector('.lightbox__overlay')
 
-//проверка, что находится в lightbox__image - пока там null
-console.log('1',lightbox__image);
 
-//создание разметки
 const imgMarkup = createGalleryImgsMarkup(galleryItems);
 galleryContainer.insertAdjacentHTML('afterbegin', imgMarkup)
-img.classList.add('gallery__image')
 
-//создаем слушателя
 galleryContainer.addEventListener('click', onGalleryClick)
 closeBtn.addEventListener('click', onCloseModal)
+backdrop.addEventListener('click', onBackdropClick)
 
 function createGalleryImgsMarkup(galleryItems){
    return galleryItems.map(({preview, original, description}) => {
@@ -45,26 +33,36 @@ function createGalleryImgsMarkup(galleryItems){
 }
 
 function onOpenModal(){
+  window.addEventListener("keydown", onEscKeyPress)
   modalBox.classList.add('is-open')
 }
 
 function onCloseModal(){
+  window.removeEventListener('keydown', onEscKeyPress)
   modalBox.classList.remove('is-open')
+  lightbox__image.removeAttribute('src')
+  lightbox__image.removeAttribute('alt')
 }
 
 function onGalleryClick(event){
 event.preventDefault()
 if(event.target.nodeName === 'IMG'){
-  
-  //открытие модального окна
   onOpenModal()
-  
-  lightbox__image.setAttribute('src', event.target.dataset.sourse)
-  lightbox__image.setAttribute('alt', event.target.alt)
+  lightbox__image.src = event.target.dataset.source
+  lightbox__image.alt = event.target.alt
 }
 }
 
+function onBackdropClick(event){
+ if(event.currentTarget === event.target) {
+   onCloseModal()
+ }
+}
 
-
+function onEscKeyPress(event){
+ if(event.code === "Escape");{
+   onCloseModal();
+ }
+}
 
 
