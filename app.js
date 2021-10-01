@@ -34,11 +34,13 @@ function createGalleryImgsMarkup(galleryItems){
 
 function onOpenModal(){
   window.addEventListener("keydown", onEscKeyPress)
+  window.addEventListener('keydown', onSliderClick)
   modalBox.classList.add('is-open')
 }
 
 function onCloseModal(){
   window.removeEventListener('keydown', onEscKeyPress)
+  window.removeEventListener('keydown', onSliderClick)
   modalBox.classList.remove('is-open')
   lightbox__image.removeAttribute('src')
   lightbox__image.removeAttribute('alt')
@@ -60,9 +62,26 @@ function onBackdropClick(event){
 }
 
 function onEscKeyPress(event){
- if(event.code === "Escape");{
+ if(event.code === "Escape"){
    onCloseModal();
  }
 }
 
-
+function onSliderClick(event){  
+  let currentIndex = galleryItems.findIndex(el => el.original === lightbox__image.src)
+if(event.code === "ArrowRight"){
+   currentIndex += 1
+   if (currentIndex>=galleryItems.length){
+    currentIndex = 0
+   }
+} 
+if(event.code === "ArrowLeft"){
+  currentIndex -= 1
+  if (currentIndex<0){
+   currentIndex = galleryItems.length-1
+  }
+}
+lightbox__image.src = galleryItems[currentIndex].original
+lightbox__image.alt = galleryItems[currentIndex].description
+} 
+    
